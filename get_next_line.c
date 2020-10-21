@@ -1,85 +1,98 @@
+#include <stdio.h>
 #include "get_next_line.h"
 
-int	get_newline(char *backup)  // backup[idx]에서 '\n' 찾음
+int		newline_check(char *save)
 {
-	int	idx;
+	int i = 0;
 
-	idx = 0;
-	while (backup[idx])
+	while (save[i])
 	{
-		if (backup[idx] == '\n')
-			return (idx);
-		idx++;
+		if (save[i] == '\n')
+			return (i);
+		i++;
 	}
 	return (-1);
 }
 
-int	line_split(char **backup, char **line, int idx)
+int 	line_split(char **save, int i, char **line)
 {
-	int		left_len;
-	char	*temp;
+	int left_len;
+	char *tmp;
 
-	(*backup)[idx] = '\0';
-	*line = ft_strdup(*backup);
-	left_len = ft_strlen(*backup + idx + 1);
+	(*save)[i] = '\0';
+	*line = ft_strdup(*save);
+	left_len = ft_strlen(*save + i + 1);
 	if (left_len == 0)
 	{
-		free(*backup);
-		*backup = 0;
+		free(*save);
+		*save = 0;
 		return (1);
 	}
-	temp = ft_strdup(*backup + idx + 1);
-	free(*backup);
-	*backup = temp;
+	tmp = ft_strdup(*save + i + 1);
+	free(*save);
+	*save = tmp;
 	return (1);
 }
 
-int		last(char **backup, char **line, int rd_size)
+int		save_check(char **save, char **line, int read_size)
 {
-	int	idx;
+	int				i;
 
-	if (rd_size < 0)  // read() 함수 읽기 실패  
+	if (read_size < 0)
 		return (-1);
-	if (*backup && (idx = get_newline(*backup)) >= 0) // *backup에 값이 있고 '\n'도 있음
+	if (*save)
 	{
-		return (line_split(backup, line, idx));
+		i = newline_check(*save);
+		if (i >= 0)
+			return (line_split(save, i, line));
+		else
+		{
+			*line = *save;
+			*save = 0;
+			return (0);
+		}
 	}
-	else if (*backup)
-	{
-		*line = *backup;
-		*backup = 0;
-		return (0);
-	}
-	*line = ft_strdup("");
+	else
+		*line = ft_strdup("");
 	return (0);
 }
-/*
-1 :  A line has been read
-0 :  EOF has been reached
--1 :  An error happened
 
-read, malloc, free
-
-Write a function which returns a line read from a
-file descriptor, without the newline.
-*/
-int		get_next_line(int fd, char **line) // 1.  file descriptor for reading  2.  The value of what has been read
+int		get_next_line(int fd, char **line)
 {
-	static char	*backup[OPEN_MAX];
-	char		buff[BUFFER_SIZE + 1];
-	int			idx;
-	int			rd_size; 
-
-	idx = 0;
-	if (fd < 0 || (line == 0) || (BUFFER_SIZE <= 0))
+	static char *save;
+	char buff[BUFFER_SIZE + 1];
+	int i;
+	int read_size = 0;
+	
+	if (fd < 0 || line == 0)
 		return (-1);
-	while ((rd_size = read(fd, buff, BUFFER_SIZE)) > 0)
+	while ((read_size = read(fd, buff, BUFFER_SIZE)) > 0)  // 실패시 -1	 파일끝에서 시도하면 0  반환값이 BUFFER_SIZE보다 작으면 파일의 끝을 만난것
 	{
-		buff[rd_size] = '\0';
-		backup[fd] = ft_strjoin(backup[fd], buff);
-		if ((idx = get_newline(backup[fd]) >= 0))
-			return (line_split(&backup[fd], line, idx));
+		buff[read_size] = '\0';
+		save = ft_strjoin(save, buff);
+		ft_memset(buff, 0, read_size);	
+		i = newline_check(save);
+		if (i >= 0)
+		{
+			return(line_split(&save, i, line));
+		}
 	}
-/*데이터를 다 읽어서 rd_size가 0일 때, backup에 남은 데이터 처리*/
-	return (last(&backup[fd], line, rd_size));
+	return (save_check(&save, line, read_size));
+}  // return > 0 - 라인 있음  / return == 0  라인 없음.
+
+int main(void)
+{
+	char *line = 0;
+	int ret;
+	int fd;
+	fd = open("/Users/jiholee/Desktop/project/get_next_line/GNL/file1", O_RDONLY);
+
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		printf("%s\n", line);
+		free(line);
+	}
+	printf("%s", line);
+	free(line);
+	close(fd);
 }
