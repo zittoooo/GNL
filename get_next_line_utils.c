@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jiholee <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/09 17:23:49 by jiholee           #+#    #+#             */
-/*   Updated: 2020/10/09 19:28:12 by jiholee          ###   ########.fr       */
+/*   Created: 2020/10/23 10:59:06 by jiholee           #+#    #+#             */
+/*   Updated: 2020/10/26 18:07:51 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t		ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
-	size_t	i;
+	size_t i;
 
 	i = 0;
 	while (str[i])
@@ -22,40 +22,44 @@ size_t		ft_strlen(const char *str)
 	return (i);
 }
 
-char		*ft_strdup(char *str)
-{
-	char	*cp;
-	size_t	i;
-
-	cp = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!cp)
-		return (NULL);
-	i = 0;
-	while (str[i])
-	{
-		cp[i] = str[i];
-		i++;
-	}
-	cp[i] = '\0';
-	return (cp);
-}
-
 char		*ft_strjoin(char *s1, char *s2)
 {
-	char	*ptr;
+	char	*new;
 	int		i;
 	int		j;
 
-	ptr = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!ptr)
+	if (!(s1) && !(s2))
+		return (NULL);
+	else if (!(s1) || !(s2))
+		return (!(s1) ? ft_strdup(s2) : ft_strdup(s1));
+	if (!(new = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (s1[i])
-		ptr[j++] = s1[i++];
+	while (s1[i] != '\0')
+		new[j++] = s1[i++];
+	free(s1);
 	i = 0;
-	while (s2[i])
-		ptr[j++] = s2[i++];
-	ptr[j] = '\0';
-	return (ptr);
+	while (s2[i] != '\0')
+		new[j++] = s2[i++];
+	new[j] = '\0';
+	return (new);
+}
+
+char		*ft_strdup(char *s1)
+{
+	char	*p;
+	int		i;
+
+	i = 0;
+	p = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
+	if (!p)
+		return (0);
+	while (s1[i])
+	{
+		p[i] = s1[i];
+		i++;
+	}
+	p[i] = '\0';
+	return (p);
 }
