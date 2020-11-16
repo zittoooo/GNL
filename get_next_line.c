@@ -6,7 +6,7 @@
 /*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 10:58:54 by jiholee           #+#    #+#             */
-/*   Updated: 2020/11/16 14:42:26 by jiholee          ###   ########.fr       */
+/*   Updated: 2020/11/16 14:51:25 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int		newline_check(char *backup)
 
 int		line_split(char **backup, char **line, int idx)
 {
-
 	char	*tmp;
 
 	(*backup)[idx] = '\0';
