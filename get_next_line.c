@@ -6,7 +6,7 @@
 /*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 10:58:54 by jiholee           #+#    #+#             */
-/*   Updated: 2020/10/26 18:06:26 by jiholee          ###   ########.fr       */
+/*   Updated: 2020/11/16 10:59:35 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,21 @@ int		backup_element_check(char **backup, char **line)
 			return (0);
 		}
 	}
-	*line = ft_strdup("");
 	return (0);
 }
 
 int		get_next_line(int fd, char **line)
 {
-	int			read_size;
+	int			read_count;
 	int			idx;
 	char		buff[BUFFER_SIZE + 1];
 	static char	*backup = 0;
 
 	if (fd < 0 || line == 0 || BUFFER_SIZE <= 0)
 		return (-1);
-	while ((read_size = read(fd, buff, BUFFER_SIZE)) > 0)
+	while ((read_count = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
-		buff[read_size] = '\0';
+		buff[read_count] = '\0';
 		backup = ft_strjoin(backup, buff);
 		idx = newline_check(backup);
 		if (idx >= 0)
@@ -85,7 +84,9 @@ int		get_next_line(int fd, char **line)
 			return (line_split(&backup, line, idx));
 		}
 	}
-	if (read_size < 0)
+	if (read_count < 0)
 		return (-1);
+	if (backup == '\0')
+		backup = ft_strdup("");
 	return (backup_element_check(&backup, line));
 }

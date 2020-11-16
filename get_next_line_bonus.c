@@ -6,7 +6,7 @@
 /*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/23 10:59:22 by jiholee           #+#    #+#             */
-/*   Updated: 2020/10/26 17:23:13 by jiholee          ###   ########.fr       */
+/*   Updated: 2020/11/16 11:02:50 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,21 @@ int		backup_element_check(char **backup, char **line)
 			return (0);
 		}
 	}
-	//else (*backup == 0)
-	*line = ft_strdup("");
 	return (0);
 }
 
 int		get_next_line(int fd, char **line)
 {
-	int			read_size;
+	int			read_count;
 	int			idx;
 	char		buff[BUFFER_SIZE + 1];
 	static char	*backup[OPEN_MAX];
 
 	if (fd < 0 || line == 0 || BUFFER_SIZE <= 0)
 		return (-1);
-	while ((read_size = read(fd, buff, BUFFER_SIZE)) > 0)
+	while ((read_count = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
-		buff[read_size] = '\0';
+		buff[read_count] = '\0';
 		backup[fd] = ft_strjoin(backup[fd], buff);
 		idx = newline_check(backup[fd]);
 		if (idx >= 0)
@@ -86,7 +84,9 @@ int		get_next_line(int fd, char **line)
 			return (line_split(&backup[fd], line, idx));
 		}
 	}
-	if (read_size < 0)
+	if (read_count < 0)
 		return (-1);
+	if (backup[fd] == '\0')
+		backup[fd] = ft_strdup("");
 	return (backup_element_check(&backup[fd], line));
 }
