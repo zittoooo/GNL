@@ -15,8 +15,8 @@ int main()
 	}
 	printf("%s", line);
 	free(line);
-    while(1);
-
 	close(fd);
+	
+	while(1);
     return (0);
 }

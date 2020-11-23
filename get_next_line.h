@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/23 10:59:14 by jiholee           #+#    #+#             */
-/*   Updated: 2020/10/26 20:14:41 by jiholee          ###   ########.fr       */
+/*   Created: 2020/11/18 12:23:33 by jiholee           #+#    #+#             */
+/*   Updated: 2020/11/18 15:48:57 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-size_t		ft_strlen(const char *str);
+int			get_next_line(int fd, char **line);
+int			line_split(char **backup, char **line, char *p_line);
+int			backup_element_check(char **backup, char **line);
+
+size_t		ft_strlen(char *str);
 char		*ft_strdup(char *str);
 char		*ft_strjoin(char *s1, char *s2);
-
-int			newline_check(char *backup);
-int			line_split(char **backup, char **line, int idx);
-int			backup_element_check(char **backup, char **line);
-int			get_next_line(int fd, char **line);
+char		*ft_strchr(char *s, char c);
 #endif

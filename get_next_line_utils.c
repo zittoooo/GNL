@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/23 10:59:06 by jiholee           #+#    #+#             */
-/*   Updated: 2020/11/16 14:26:32 by jiholee          ###   ########.fr       */
+/*   Created: 2020/11/18 12:23:42 by jiholee           #+#    #+#             */
+/*   Updated: 2020/11/18 12:30:23 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t		ft_strlen(const char *str)
+size_t		ft_strlen(char *str)
 {
 	size_t i;
 
@@ -65,4 +65,20 @@ char		*ft_strdup(char *s1)
 	}
 	p[i] = '\0';
 	return (p);
+}
+
+char		*ft_strchr(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return ((char *)(s + i));
+		i++;
+	}
+	if (s[i] == c)
+		return ((char *)(s + i));
+	return (0);
 }

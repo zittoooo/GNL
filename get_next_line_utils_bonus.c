@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jiholee <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/23 10:59:56 by jiholee           #+#    #+#             */
-/*   Updated: 2020/11/13 14:55:25 by jiholee          ###   ########.fr       */
+/*   Created: 2020/11/18 12:42:28 by jiholee           #+#    #+#             */
+/*   Updated: 2020/11/18 12:42:29 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-size_t		ft_strlen(const char *str)
+size_t		ft_strlen(char *str)
 {
 	size_t i;
 
@@ -65,4 +65,20 @@ char		*ft_strdup(char *s1)
 	}
 	p[i] = '\0';
 	return (p);
+}
+
+char		*ft_strchr(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return ((char *)(s + i));
+		i++;
+	}
+	if (s[i] == c)
+		return ((char *)(s + i));
+	return (0);
 }

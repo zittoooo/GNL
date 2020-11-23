@@ -5,34 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jiholee <jiholee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/23 10:58:54 by jiholee           #+#    #+#             */
-/*   Updated: 2020/11/16 14:51:25 by jiholee          ###   ########.fr       */
+/*   Created: 2020/11/18 12:23:38 by jiholee           #+#    #+#             */
+/*   Updated: 2020/11/20 16:01:34 by jiholee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		newline_check(char *backup)
-{
-	int idx;
-
-	idx = 0;
-	while (backup[idx])
-	{
-		if (backup[idx] == '\n')
-			return (idx);
-		idx++;
-	}
-	return (-1);
-}
-
-int		line_split(char **backup, char **line, int idx)
+int		line_split(char **backup, char **line, char *p_line)
 {
 	char	*tmp;
 
-	(*backup)[idx] = '\0';
+	*p_line = '\0';
 	*line = ft_strdup(*backup);
-	tmp = ft_strdup(*backup + idx + 1);
+	tmp = ft_strdup(p_line + 1);
 	free(*backup);
 	*backup = tmp;
 	return (1);
@@ -40,45 +26,40 @@ int		line_split(char **backup, char **line, int idx)
 
 int		backup_element_check(char **backup, char **line)
 {
-	int i;
+	char *p_line;
 
-	if (*backup)
+	p_line = ft_strchr(*backup, '\n');
+	if (p_line != '\0')
+		return (line_split(backup, line, p_line));
+	else
 	{
-		i = newline_check(*backup);
-		if (i >= 0)
-			return (line_split(backup, line, i));
-		else
-		{
-			*line = *backup;
-			*backup = 0;
-			return (0);
-		}
+		*line = *backup;
+		*backup = 0;
+		return (0);
 	}
-	return (0);
 }
 
 int		get_next_line(int fd, char **line)
 {
-	int			read_count;
-	int			idx;
-	char		buff[BUFFER_SIZE + 1];
-	static char	*backup = 0;
+	static char	*backup;
+	char		buf[BUFFER_SIZE + 1];
+	int			read_size;
+	char		*p_line;
 
+	p_line = 0;
 	if (fd < 0 || line == 0 || BUFFER_SIZE <= 0)
 		return (-1);
-	while ((read_count = read(fd, buff, BUFFER_SIZE)) > 0)
+	while ((read_size = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
-		buff[read_count] = '\0';
-		backup = ft_strjoin(backup, buff);
-		idx = newline_check(backup);
-		if (idx >= 0)
-		{
-			return (line_split(&backup, line, idx));
-		}
+		buf[read_size] = '\0';
+		backup = ft_strjoin(backup, buf);
+		p_line = ft_strchr(backup, '\n');
+		if (p_line != '\0')
+			return (line_split(&backup, line, p_line));
 	}
-	if (read_count < 0)
+	if (read_size < 0)
 		return (-1);
-	if (backup == '\0')
+	if (backup == 0)
 		backup = ft_strdup("");
 	return (backup_element_check(&backup, line));
 }
